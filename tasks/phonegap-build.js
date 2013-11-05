@@ -5,13 +5,13 @@
   
   function start(taskRefs) {
     try {
-      triggerBuild(taskRefs, responseHandler);
+      triggerBuild(taskRefs);
     } catch (err) {
       taskRefs.log.fail(err.message);
     }
   }
 
-  function triggerBuild(taskRefs, callback) {
+  function triggerBuild(taskRefs) {
     var config = { };
     var baseUrl = 'https://build.phonegap.com/api/v1/apps/';
     var appID = taskRefs.options.appId;
@@ -21,22 +21,31 @@
 
     taskRefs.log.ok("Starting upload");
     
-    needle.put(buildUrl, data, config, callback);
+    needle.put(buildUrl, data, config,
+      responseHandler("Trigger Build", taskRefs, function (response, body) {
+          taskRefs.done();
+      })
+    );
+
   }
 
-  function responseHandler(error, resp, body) {
-    if (!error && (resp.statusCode >= 200 && resp.statusCode < 400)) {
-      taskRefs.log.ok(name + " successful (HTTP " + resp.statusCode + ")");
-      success(resp, body);
-    } else if (error) {
-      taskRefs.log.fail(name + " failed:");
-      taskRefs.log.error("Message: " + error);
-      new Error(error);
-    } else {
-      taskRefs.log.fail(name + " failed (HTTP " + resp.statusCode + ")");
-      taskRefs.log.error("Message: " + body.error);
-      new Error(body.error);
-    }
+  function responseHandler(name, taskRefs, success, error) {
+    error = error || taskRefs.done;
+
+    return function (err, resp, body) {
+      if (!err && (resp.statusCode >= 200 && resp.statusCode < 400)) {
+        taskRefs.log.ok(name + " successful (HTTP " + resp.statusCode + ")");
+        success(resp, body);
+      } else if (err) {
+        taskRefs.log.fail(name + " failed:");
+        taskRefs.log.error("Message: " + err);
+        error(new Error(err));
+      } else {
+        taskRefs.log.fail(name + " failed (HTTP " + resp.statusCode + ")");
+        taskRefs.log.error("Message: " + body.error);
+        error(new Error(body.error));
+      }
+    };
   }
   
   module.exports = function (grunt) {
