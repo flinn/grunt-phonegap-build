@@ -15,7 +15,7 @@
     var config = { };
     var baseUrl = 'https://build.phonegap.com/api/v1/apps/';
     var appID = taskRefs.options.appId;
-    data = { data: { pull: true } };
+    var data = { data: { pull: true } };
 
     var buildUrl = baseUrl + appID + '?token=' + taskRefs.options.user.token;
 
