@@ -19,6 +19,8 @@
 
     var buildUrl = baseUrl + appID + '?token=' + taskRefs.options.user.token;
 
+    taskRefs.buildUrl = buildUrl;
+
     taskRefs.log.ok("Starting upload");
     
     needle.put(buildUrl, data, config,
@@ -37,11 +39,11 @@
         taskRefs.log.ok(name + " successful (HTTP " + resp.statusCode + ")");
         success(resp, body);
       } else if (err) {
-        taskRefs.log.fail(name + " failed:");
+        taskRefs.log.fail(name + " failed: (" + taskRefs.buildUrl + ")");
         taskRefs.log.error("Message: " + err);
         error(new Error(err));
       } else {
-        taskRefs.log.fail(name + " failed (HTTP " + resp.statusCode + ")");
+        taskRefs.log.fail(name + " failed (HTTP " + resp.statusCode + " from " + taskRefs.buildUrl + ")");
         taskRefs.log.error("Message: " + body.error);
         error(new Error(body.error));
       }
