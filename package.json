@@ -14,20 +14,19 @@
   },
   "main": "grunt.js",
   "engines": {
-    "node": ">= 0.8.0"
+    "node": ">= 0.8.x"
   },
   "scripts": {
     "test": "grunt test"
   },
   "dependencies": {
-    "needle": "*",
+    "needle": "~0.6.3",
     "read": "~1.0.4"
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
   },
   "devDependencies": {
-    "grunt-testacular": "*",
     "grunt": "~0.4.0"
   },
   "keywords": [

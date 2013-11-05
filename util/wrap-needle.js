@@ -18,7 +18,7 @@ module.exports = function wrapNeedle(baseUrl, options) {
         password: options.user.password,
         timeout: options.timeout
       },
-      query = options.user.token ? '?auth_token=' + options.user.token : '',
+      query = options.user.token ? '?token=' + options.user.token : '',
       wrapped = { };
 
   Object.keys(needle).forEach(function (property) {
@@ -33,7 +33,7 @@ module.exports = function wrapNeedle(baseUrl, options) {
         args[configIndex] = mapMerge(args[configIndex], config);
 
         needleFn.apply(needle, args);
-      }
+      };
     }
   });
 
