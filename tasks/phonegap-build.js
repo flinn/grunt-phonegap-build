@@ -25,17 +25,17 @@
   }
 
   function responseHandler(error, resp, body) {
-    if (!err && (resp.statusCode >= 200 && resp.statusCode < 400)) {
+    if (!error && (resp.statusCode >= 200 && resp.statusCode < 400)) {
       taskRefs.log.ok(name + " successful (HTTP " + resp.statusCode + ")");
       success(resp, body);
-    } else if (err) {
+    } else if (error) {
       taskRefs.log.fail(name + " failed:");
-      taskRefs.log.error("Message: " + err);
-      error(new Error(err));
+      taskRefs.log.error("Message: " + error);
+      new Error(error);
     } else {
       taskRefs.log.fail(name + " failed (HTTP " + resp.statusCode + ")");
       taskRefs.log.error("Message: " + body.error);
-      error(new Error(body.error));
+      new Error(body.error);
     }
   }
   
