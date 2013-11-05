@@ -12,18 +12,18 @@
   }
 
   function triggerBuild(taskRefs) {
-    var config = { };
+    var config = { multipart: true };
     var baseUrl = 'https://build.phonegap.com/api/v1/apps/';
     var appID = taskRefs.options.appId;
-    var data = { data: { pull: true } };
+    var data = { pull: true };
 
-    var buildUrl = baseUrl + appID + '?token=' + taskRefs.options.user.token;
+    var buildUrl = baseUrl + appID + '?auth_token=' + taskRefs.options.user.token;
 
     taskRefs.buildUrl = buildUrl;
 
     taskRefs.log.ok("Starting upload");
     
-    needle.put(buildUrl, data, config,
+    taskRefs.needle.put(buildUrl, data, config,
       responseHandler("Trigger Build", taskRefs, function (response, body) {
           taskRefs.done();
       })
@@ -60,7 +60,7 @@
       var done = this.async(),
           taskRefs = {
             log: grunt.log, options: opts, done: done,
-            needle: null /* wrapped version added in start */
+            needle: needle
           };
 
       if (!opts.user.token) {
